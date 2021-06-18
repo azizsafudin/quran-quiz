@@ -1,6 +1,6 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
-import { Select, Button } from 'antd';
+import { useState } from 'preact/hooks';
+import { Select, Slider, Button } from 'antd';
 
 import s from './style.css';
 
@@ -8,6 +8,7 @@ type Props = {
   quran: any;
   translationList: Record<string, any>[];
   surahMap: Record<string, any>;
+  lifelines: Record<string, any>;
   onSelectTranslation: (id: string) => void;
   onStartQuiz: (settings: Record<string, any>) => void;
 }
@@ -16,6 +17,7 @@ const Menu = (props: Props) => {
   const { 
     quran,
     surahMap,
+    lifelines,
     translationList,
     onSelectTranslation,
     onStartQuiz
@@ -93,17 +95,6 @@ const Menu = (props: Props) => {
     </Select>
   )
 
-  const lifelines = {
-    getsurahenglish: "Get the translation of the surah the ayah is from.",
-    getsuraharabic: "Get the Arabic name of the surah the ayah is from.",
-    getbefore: "Get the ayah before.",
-    getafter: "Get the ayah after.",
-    getjuz: "Get which Juz the ayah is from.",
-    getrandomword: "Get a random Arabic word from the ayah.",
-    getlocation: "Get ayah is Meccan and Medinan.",
-    getnumber: "Get the number of the ayah in the surah."
-  };
-
   const renderLifelineList = () => {
     return (
       <Select
@@ -130,8 +121,10 @@ const Menu = (props: Props) => {
   const startQuiz = () => {
     const pref = {
       translation: selectedTranslation,
-      surahs: selectedSurahs
+      surahs: selectedSurahs,
+      lifelines: selectedLifelines
     };
+    onStartQuiz(pref);
   }
 
   return (
@@ -154,7 +147,7 @@ const Menu = (props: Props) => {
               {renderLifelineList()}
             </div>
             <div class={s["button-container"]}>
-              <Button onClick={onStartQuiz} type="default" size="large" shape="round">
+              <Button onClick={startQuiz} type="default" size="large" shape="round">
                 Start Quiz!
               </Button>
             </div>
