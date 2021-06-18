@@ -2,7 +2,7 @@
 export const getEdition = async (
   format: string | null = "text", 
   language: string | null = "en", 
-  type: string | null= "translation"
+  type: string | null = "translation"
 ): Promise<Record<string, any>> => {
   const response = await fetch(`http://api.alquran.cloud/v1/edition?format=${format}&language=${language}&type=${type}`);
   const json = await response.json();
