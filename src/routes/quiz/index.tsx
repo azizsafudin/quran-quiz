@@ -1,13 +1,14 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Select, Button, Spin } from 'antd';
-import { getEdition, getQuran } from '../../api/quran';
+import { getEdition, getLanguages, getQuran } from '../../api/quran';
 import Menu from "../../components/menu";
 
 import s from './style.css';
 
 const Quiz: FunctionalComponent = () => {
   const [isLoading, setIsLoading] = useState(true)
+  const [languageList, setLanguageList] = useState([]);
   const [translationList, setTranslationList] = useState([]);
   const [quran, setQuran] = useState({});
   const [surahMap, setSurahMap] = useState({})
@@ -25,10 +26,15 @@ const Quiz: FunctionalComponent = () => {
   };
 
   const init = async (): Promise<void> => {
-    const editionData = await getEdition();
     const quranData = await getQuran();
-    setTranslationList(editionData);
     setQuran(quranData);
+
+    const languageData = await getLanguages();
+    setLanguageList(languageData);
+
+    const editionData = await getEdition();
+    setTranslationList(editionData);
+
     const newSurahMap = {};
     quranData.surahs.forEach(({ 
       number, 
@@ -46,6 +52,11 @@ const Quiz: FunctionalComponent = () => {
     init();
   }, []);
 
+  const onSelectLanguage = async (lang: string): Promise<void> => {
+    const editionData = await getEdition("text", lang, "translation");
+    setTranslationList(editionData);
+  }
+
   const onSelectTranslation = async (id: string): Promise<void> => {
     const translationData = await getQuran(id);
     setTranslation(translationData);
@@ -62,9 +73,11 @@ const Quiz: FunctionalComponent = () => {
         <Spin size="large" />
         :
         <Menu
-          quran={quran} 
+          quran={quran}
+          languageList={languageList}
           translationList={translationList} 
           surahMap={surahMap}
+          onSelectLanguage={onSelectLanguage}
           onSelectTranslation={onSelectTranslation}
           onStartQuiz={onStartQuiz}
           lifelines={lifelines}

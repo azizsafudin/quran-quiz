@@ -6,9 +6,11 @@ import s from './style.css';
 
 type Props = {
   quran: any;
+  languageList: Record<string, any>[];
   translationList: Record<string, any>[];
   surahMap: Record<string, any>;
   lifelines: Record<string, any>;
+  onSelectLanguage: (lang: string) => void;
   onSelectTranslation: (id: string) => void;
   onStartQuiz: (settings: Record<string, any>) => void;
 }
@@ -17,24 +19,40 @@ const Menu = (props: Props) => {
   const { 
     quran,
     surahMap,
-    lifelines,
+    languageList,
     translationList,
+    lifelines,
+    onSelectLanguage,
     onSelectTranslation,
     onStartQuiz
   } = props;
 
-  const [progress, setProgress] = useState(0);
-  
+  const [progress, setProgress] = useState(1);
+
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [selectedTranslation, setSelectedTranslation] = useState("");
   const [selectedSurahs, setSelectedSurahs] = useState(new Set());
   const [selectedLifelines, setSelectedLifelines] = useState(new Set());
   const [rounds, setRounds] = useState(1);
 
+  const handleLanguageChange = (lang: string): void => {
+    setSelectedTranslation("")
+    onSelectLanguage(lang)
+    setSelectedLanguage(lang);
+    setProgress(progress >= 1 ? progress: 1);
+  }
+
+  const handleTranslationChange = (id: string): void => {
+    onSelectTranslation(id)
+    setSelectedTranslation(id);
+    setProgress(progress >= 2 ? progress: 2);
+  }
+
   const onSelectSurah = (key: string) => {
     const newSet = new Set(selectedSurahs);
     newSet.add(surahMap[key]);
     setSelectedSurahs(newSet);
-    setProgress(progress >= 2 ? progress: 2);
+    setProgress(progress >= 3 ? progress: 3);
   }
 
   const onDeselectSurah = (key: string) => {
@@ -47,7 +65,7 @@ const Menu = (props: Props) => {
     const newSet = new Set(selectedLifelines);
     newSet.add(key);
     setSelectedLifelines(newSet);
-    setProgress(progress >= 3 ? progress: 3);
+    setProgress(progress >= 4 ? progress: 4);
   }
 
   const onDeselectLifeline = (key: string) => {
@@ -56,6 +74,26 @@ const Menu = (props: Props) => {
     setSelectedLifelines(newSet);
   }
 
+  const renderLanguageList = (): JSX.Element => (
+    <Select
+      size="large"
+      defaultValue="en"
+      style={{ width: '100%' }}
+      showArrow={true}
+      placeholder="Select a language"
+      onSelect={handleLanguageChange}
+    >
+      {languageList.map((val) => (
+        <Select.Option 
+          key={val} 
+          value={val}
+        >
+          {val}
+        </Select.Option>
+      ))}
+    </Select>
+  );
+
   const renderTranslationList = (): JSX.Element => (
     <Select
       showSearch
@@ -63,11 +101,7 @@ const Menu = (props: Props) => {
       style={{ width: '100%' }}
       showArrow={true}
       placeholder="Select a translation to use"
-      onSelect={id => {
-        onSelectTranslation(id)
-        setSelectedTranslation(id);
-        setProgress(progress >= 1 ? progress: 1);
-      }}
+      onSelect={handleTranslationChange}
     >
       {translationList.map(({ identifier, englishName }) => (
         <Select.Option 
@@ -126,6 +160,7 @@ const Menu = (props: Props) => {
 
   const startQuiz = () => {
     const pref = {
+      language: selectedLanguage,
       translation: selectedTranslation,
       surahs: selectedSurahs,
       lifelines: selectedLifelines
@@ -137,22 +172,28 @@ const Menu = (props: Props) => {
     <div class={s["menu-container"]}>
       <h1 class={s.title}>Qur'an Quiz App</h1>
         <div class={s["form-row"]}>
-          <label class={s["form-label"]}>Translation</label>
-          {renderTranslationList()}
+          <label class={s["form-label"]}>Language</label>
+          {renderLanguageList()}
         </div>
         {progress > 0 && (
+          <div class={s["form-row"]}>
+            <label class={s["form-label"]}>Translation</label>
+            {renderTranslationList()}
+          </div>
+        )}
+        {progress > 1 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Surah</label>
             {renderSurahList()}
           </div>
         )}
-        {progress > 1 && (
+        {progress > 2 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Lifelines</label>
             {renderLifelineList()}
           </div>
         )}
-        {progress > 2 && (
+        {progress > 3 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>No. of Rounds</label>
             <Slider
@@ -166,7 +207,7 @@ const Menu = (props: Props) => {
             />
           </div>
         )}
-        {progress > 2 && (
+        {progress > 3 && (
           <div class={s["button-container"]}>
             <Button onClick={startQuiz} type="default" size="large" shape="round" disabled={!(selectedTranslation && selectedSurahs.size > 0)}>
               Start Quiz!
