@@ -6,9 +6,8 @@ import s from './style.css';
 
 type Props = {
   quran: any;
-  languageList: Record<string, any>[];
+  languageList: string[];
   translationList: Record<string, any>[];
-  surahMap: Record<string, any>;
   lifelines: Record<string, any>;
   onSelectLanguage: (lang: string) => void;
   onSelectTranslation: (id: string) => void;
@@ -18,7 +17,6 @@ type Props = {
 const Menu = (props: Props) => {
   const { 
     quran,
-    surahMap,
     languageList,
     translationList,
     lifelines,
@@ -50,14 +48,14 @@ const Menu = (props: Props) => {
 
   const onSelectSurah = (key: string) => {
     const newSet = new Set(selectedSurahs);
-    newSet.add(surahMap[key]);
+    newSet.add(key);
     setSelectedSurahs(newSet);
     setProgress(progress >= 3 ? progress: 3);
   }
 
   const onDeselectSurah = (key: string) => {
     const newSet = new Set(selectedSurahs);
-    newSet.delete(surahMap[key]);
+    newSet.delete(key);
     setSelectedSurahs(newSet);
   }
 
@@ -70,7 +68,7 @@ const Menu = (props: Props) => {
 
   const onDeselectLifeline = (key: string) => {
     const newSet = new Set(selectedLifelines);
-    newSet.delete(surahMap[key]);
+    newSet.delete(key);
     setSelectedLifelines(newSet);
   }
 
@@ -123,13 +121,14 @@ const Menu = (props: Props) => {
       placeholder="Select your Surahs to be quizzed on"
       onSelect={onSelectSurah}
       onDeselect={onDeselectSurah}
+      filterOption={(val, opt) => opt.children.toLowerCase().includes(val)}
     >
       {quran.surahs.map(({ number, englishName, englishNameTranslation, name }) => (
           <Select.Option 
             key={number}
-            value={`${englishName} - ${englishNameTranslation} - ${name}`}
+            value={number}
           >
-            {englishName} - {englishNameTranslation} - {name}
+            {`${englishName} - ${englishNameTranslation} - ${name}`}
           </Select.Option>
         ))}
     </Select>

@@ -11,14 +11,13 @@ const Quiz: FunctionalComponent = () => {
   const [languageList, setLanguageList] = useState([]);
   const [translationList, setTranslationList] = useState([]);
   const [quran, setQuran] = useState({});
-  const [surahMap, setSurahMap] = useState({})
   const [translation, setTranslation] = useState({});
 
   const lifelines = {
-    getsurahenglish: "Get the translation of the surah the ayah is from",
-    getsuraharabic: "Get the Arabic name of the surah the ayah is from",
     getbefore: "Get the ayah before",
     getafter: "Get the ayah after",
+    getsurahenglish: "Get the English translation of the name of the surah the ayah is from",
+    getsuraharabic: "Get the Arabic name of the surah the ayah is from",
     getjuz: "Get which Juz the ayah is from",
     getrandomword: "Get a random Arabic word from the ayah",
     getlocation: "Get ayah is Meccan and Medinan",
@@ -35,16 +34,6 @@ const Quiz: FunctionalComponent = () => {
     const editionData = await getEdition();
     setTranslationList(editionData);
 
-    const newSurahMap = {};
-    quranData.surahs.forEach(({ 
-      number, 
-      englishName, 
-      englishNameTranslation, 
-      name 
-    }) => {
-      newSurahMap[`${englishName} - ${englishNameTranslation} - ${name}`] = number;
-    })
-    setSurahMap(newSurahMap);
     setIsLoading(false);
   }
 
@@ -76,7 +65,6 @@ const Quiz: FunctionalComponent = () => {
           quran={quran}
           languageList={languageList}
           translationList={translationList} 
-          surahMap={surahMap}
           onSelectLanguage={onSelectLanguage}
           onSelectTranslation={onSelectTranslation}
           onStartQuiz={onStartQuiz}
