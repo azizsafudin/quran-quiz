@@ -1,9 +1,9 @@
 import { FunctionalComponent, h } from 'preact';
 import { Route, Router } from 'preact-router';
 
-import Home from '../routes/home';
-import Quiz from '../routes/quiz';
-import NotFoundPage from '../routes/notfound';
+import Home from './routes/home';
+import Quiz from './routes/quiz';
+import NotFoundPage from './routes/notfound';
 
 const App: FunctionalComponent = () => {
   return (
