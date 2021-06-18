@@ -14,14 +14,14 @@ const Quiz: FunctionalComponent = () => {
   const [translation, setTranslation] = useState({});
 
   const lifelines = {
-    getsurahenglish: "Get the translation of the surah the ayah is from.",
-    getsuraharabic: "Get the Arabic name of the surah the ayah is from.",
-    getbefore: "Get the ayah before.",
-    getafter: "Get the ayah after.",
-    getjuz: "Get which Juz the ayah is from.",
-    getrandomword: "Get a random Arabic word from the ayah.",
-    getlocation: "Get ayah is Meccan and Medinan.",
-    getnumber: "Get the number of the ayah in the surah."
+    getsurahenglish: "Get the translation of the surah the ayah is from",
+    getsuraharabic: "Get the Arabic name of the surah the ayah is from",
+    getbefore: "Get the ayah before",
+    getafter: "Get the ayah after",
+    getjuz: "Get which Juz the ayah is from",
+    getrandomword: "Get a random Arabic word from the ayah",
+    getlocation: "Get ayah is Meccan and Medinan",
+    getnumber: "Get the number of the ayah in the surah"
   };
 
   const init = async (): Promise<void> => {

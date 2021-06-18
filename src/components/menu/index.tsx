@@ -1,5 +1,5 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 
 import s from './style.css';
@@ -22,15 +22,19 @@ const Menu = (props: Props) => {
     onSelectTranslation,
     onStartQuiz
   } = props;
+
+  const [progress, setProgress] = useState(0);
   
   const [selectedTranslation, setSelectedTranslation] = useState("");
   const [selectedSurahs, setSelectedSurahs] = useState(new Set());
   const [selectedLifelines, setSelectedLifelines] = useState(new Set());
+  const [rounds, setRounds] = useState(1);
 
   const onSelectSurah = (key: string) => {
     const newSet = new Set(selectedSurahs);
     newSet.add(surahMap[key]);
     setSelectedSurahs(newSet);
+    setProgress(progress >= 2 ? progress: 2);
   }
 
   const onDeselectSurah = (key: string) => {
@@ -43,6 +47,7 @@ const Menu = (props: Props) => {
     const newSet = new Set(selectedLifelines);
     newSet.add(key);
     setSelectedLifelines(newSet);
+    setProgress(progress >= 3 ? progress: 3);
   }
 
   const onDeselectLifeline = (key: string) => {
@@ -61,6 +66,7 @@ const Menu = (props: Props) => {
       onSelect={id => {
         onSelectTranslation(id)
         setSelectedTranslation(id);
+        setProgress(progress >= 1 ? progress: 1);
       }}
     >
       {translationList.map(({ identifier, englishName }) => (
@@ -134,24 +140,38 @@ const Menu = (props: Props) => {
           <label class={s["form-label"]}>Translation</label>
           {renderTranslationList()}
         </div>
-        {selectedTranslation && (
+        {progress > 0 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Surah</label>
             {renderSurahList()}
           </div>
         )}
-        {selectedTranslation && selectedSurahs.size > 0 && (
-          <Fragment>
-            <div class={s["form-row"]}>
-              <label class={s["form-label"]}>Lifelines</label>
-              {renderLifelineList()}
-            </div>
-            <div class={s["button-container"]}>
-              <Button onClick={startQuiz} type="default" size="large" shape="round">
-                Start Quiz!
-              </Button>
-            </div>
-          </Fragment>
+        {progress > 1 && (
+          <div class={s["form-row"]}>
+            <label class={s["form-label"]}>Lifelines</label>
+            {renderLifelineList()}
+          </div>
+        )}
+        {progress > 2 && (
+          <div class={s["form-row"]}>
+            <label class={s["form-label"]}>No. of Rounds</label>
+            <Slider
+              tipFormatter={(val: number): string => { return val === 0 ? "Unlimited Rounds ∞" : String(val)}}
+              style={{ width: '100%' }}
+              min={0}
+              max={100}
+              marks={{0: "∞", 5: "5", 25: "25", 50: "50", 100: "100" }}
+              onChange={setRounds}
+              value={rounds}
+            />
+          </div>
+        )}
+        {progress > 2 && (
+          <div class={s["button-container"]}>
+            <Button onClick={startQuiz} type="default" size="large" shape="round" disabled={!(selectedTranslation && selectedSurahs.size > 0)}>
+              Start Quiz!
+            </Button>
+          </div>
         )}
     </div>
   )
