@@ -46,13 +46,14 @@ const Quiz: FunctionalComponent = () => {
     setTranslationList(editionData);
   }
 
-  const onSelectTranslation = async (id: string): Promise<void> => {
+  const getTranslations = async (id: string): Promise<void> => {
     const translationData = await getQuran(id);
     setTranslation(translationData);
   }
 
   const onStartQuiz = (settings: Record<string, any>) => {
     console.log(settings)
+    getTranslations(settings.translation);
   }
 
   return (
@@ -66,7 +67,6 @@ const Quiz: FunctionalComponent = () => {
           languageList={languageList}
           translationList={translationList} 
           onSelectLanguage={onSelectLanguage}
-          onSelectTranslation={onSelectTranslation}
           onStartQuiz={onStartQuiz}
           lifelines={lifelines}
         />

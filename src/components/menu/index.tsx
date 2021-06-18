@@ -1,5 +1,5 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 
 import s from './style.css';
@@ -10,7 +10,6 @@ type Props = {
   translationList: Record<string, any>[];
   lifelines: Record<string, any>;
   onSelectLanguage: (lang: string) => void;
-  onSelectTranslation: (id: string) => void;
   onStartQuiz: (settings: Record<string, any>) => void;
 }
 
@@ -21,7 +20,6 @@ const Menu = (props: Props) => {
     translationList,
     lifelines,
     onSelectLanguage,
-    onSelectTranslation,
     onStartQuiz
   } = props;
 
@@ -41,7 +39,6 @@ const Menu = (props: Props) => {
   }
 
   const handleTranslationChange = (id: string): void => {
-    onSelectTranslation(id)
     setSelectedTranslation(id);
     setProgress(progress >= 2 ? progress: 2);
   }
