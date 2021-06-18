@@ -1,11 +1,12 @@
-import { FunctionalComponent, h } from 'preact';
+import { FunctionalComponent, Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Select } from 'antd';
+import { Select, Button, Spin } from 'antd';
 import { getEdition, getQuran } from '../../api/quran';
 
 import s from './style.css';
 
 const Quiz: FunctionalComponent = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const [translationList, setTranslationList] = useState([]);
   const [quran, setQuran] = useState({});
   const [surahMap, setSurahMap] = useState({})
@@ -30,6 +31,7 @@ const Quiz: FunctionalComponent = () => {
       newSurahMap[`${englishName} - ${englishNameTranslation} - ${name}`] = number;
     })
     setSurahMap(newSurahMap);
+    setIsLoading(false);
   }
 
   useEffect(()=> {
@@ -52,6 +54,10 @@ const Quiz: FunctionalComponent = () => {
     const newSet = new Set(selectedSurahs);
     newSet.delete(surahMap[key]);
     setSelectedSurahs(newSet);
+  }
+
+  const onStartQuiz = () => {
+
   }
 
   const renderTranslationList = (): JSX.Element => (
@@ -86,7 +92,7 @@ const Quiz: FunctionalComponent = () => {
     >
       {quran.surahs.map(({ number, englishName, englishNameTranslation, name }) => (
           <Select.Option 
-            key={number} 
+            key={number}
             value={`${englishName} - ${englishNameTranslation} - ${name}`}
           >
             {englishName} - {englishNameTranslation} - {name}
@@ -96,18 +102,32 @@ const Quiz: FunctionalComponent = () => {
   )
 
   return (
-  <div class={s["quiz-container"]}>
-      <h1 class={s.title}>Qur'an Quiz App</h1>
-      <div class={s["form-row"]}>
-        <label class={s["form-label"]}>Translation</label>
-        {renderTranslationList()}
-      </div>
-      {selectedTranslation && (
-        <div class={s["form-row"]}>
-          <label class={s["form-label"]}>Surahs</label>
-          {renderSurahList()}
-        </div>
-      )}
+    <div class={s["quiz-container"]}>
+      {isLoading
+        ? 
+        <Spin size="large" />
+        :
+        <Fragment>
+          <h1 class={s.title}>Qur'an Quiz App</h1>
+          <div class={s["form-row"]}>
+            <label class={s["form-label"]}>Translation</label>
+            {renderTranslationList()}
+          </div>
+          {selectedTranslation && (
+            <div class={s["form-row"]}>
+              <label class={s["form-label"]}>Surah</label>
+              {renderSurahList()}
+            </div>
+          )}
+          {selectedTranslation && selectedSurahs.size > 0 && (
+            <div class={s["button-container"]}>
+              <Button onClick={onStartQuiz} type="default" size="large" shape="round">
+                Start Quiz!
+              </Button>
+            </div>
+          )}
+        </Fragment>
+      }
     </div>
   );
 };
