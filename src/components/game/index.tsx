@@ -98,14 +98,12 @@ const Game = (props: Props) => {
               <span class={s["main-text"]}>{round} out of {settings.rounds === 0 ? "∞" : settings.rounds} </span>
             </div>
             <div class={s["item-row"]}>
-              <span class={s["main-text"]}>Ayaah: </span> 
               <span class={s["content-text"]}>
                 "{currQuestion && currQuestion.ayah.text}""
               </span>
             </div>
             <div class={s["item-row"]}>
-              <span class={s["main-text"]}>Answer: </span> 
-              <span class={s["content-text"]}>
+              <span class={s["arabic-text"]}>
                 {currQuestion && currQuestion.answer.text}
               </span>
             </div>
