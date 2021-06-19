@@ -78,7 +78,7 @@ const Game = (props: Props) => {
 
   const incrementRound = () => {
     if (round === 0) setGameState(GAME_STATE.IN_PROGRESS);
-    if (round === settings.rounds) {
+    if (round === settings.rounds && settings.rounds !== 0) {
       setGameState(GAME_STATE.COMPLETED_ROUNDS);
       return;
     }
@@ -90,12 +90,12 @@ const Game = (props: Props) => {
       <h1 class={s.title}>Qur'an Quiz App</h1>
       <div class={s["game-container"]}>
         {gameState === GAME_STATE.UNSTARTED && (
-          <Button type="default" size="large" shape="round"onClick={incrementRound}>Start Quiz</Button>
+          <Button type="default" size="large" shape="round"onClick={incrementRound}>Begin Quiz</Button>
         )} 
         {gameState === GAME_STATE.IN_PROGRESS && currQuestion && (
           <Fragment>
-            <div class={s["item-row"]}>
-              <span class={s["main-text"]}>Round: {round}</span>
+            <div>
+              <span class={s["main-text"]}>{round} out of {settings.rounds === 0 ? "∞" : settings.rounds} </span>
             </div>
             <div class={s["item-row"]}>
               <span class={s["main-text"]}>Ayaah: </span> 
