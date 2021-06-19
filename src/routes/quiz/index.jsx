@@ -1,4 +1,4 @@
-import { FunctionalComponent, h } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Spin } from 'antd';
 import { getQuran } from '../../api/quran';
@@ -18,14 +18,14 @@ export const lifelines = {
   getnumber: "Get the number of the ayah in the surah"
 };
 
-const Quiz: FunctionalComponent = () => {
+const Quiz = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [quran, setQuran] = useState({});
   const [translation, setTranslation] = useState({});
   const [settings, setSettings] = useState(null);
   const [isGameStarted, setIsGameStarted] = useState(false);
 
-  const init = async (): Promise<void> => {
+  const init = async () => {
     const quranData = await getQuran();
     setQuran(quranData);
 
@@ -36,12 +36,12 @@ const Quiz: FunctionalComponent = () => {
     init();
   }, []);
 
-  const getTranslations = async (id: string): Promise<void> => {
+  const getTranslations = async (id) => {
     const translationData = await getQuran(id);
     setTranslation(translationData);
   }
 
-  const onStartQuiz = async (settings: Record<string, any>) => {
+  const onStartQuiz = async (settings) => {
     await getTranslations(settings.translation);
     setSettings(settings);
     setIsGameStarted(true);

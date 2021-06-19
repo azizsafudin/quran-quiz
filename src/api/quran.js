@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const getLanguages = async (): Promise<Record<string, any>[]> => {
+export const getLanguages = async () => {
   try {
     const response = await fetch("http://api.alquran.cloud/v1/edition/language");
     const json = await response.json();
@@ -15,10 +14,10 @@ export const getLanguages = async (): Promise<Record<string, any>[]> => {
 }
 
 export const getEdition = async (
-  format: string | null = "text", 
-  language: string | null = "en", 
-  type: string | null = "translation"
-): Promise<Record<string, any>[]> => {
+  format, 
+  language, 
+  type
+) => {
   try {
     const response = await fetch(`http://api.alquran.cloud/v1/edition?format=${format}&language=${language}&type=${type}`);
     const json = await response.json();
@@ -34,8 +33,8 @@ export const getEdition = async (
 }
 
 export const getQuran = async (
-  edition: string | null = "quran-uthmani"
-): Promise<Record<string, any>> => {
+  edition = "quran-uthmani"
+) => {
   const response = await fetch(`http://api.alquran.cloud/v1/quran/${edition}`);
   const json = await response.json();
 

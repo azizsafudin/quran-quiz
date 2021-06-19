@@ -1,9 +1,9 @@
-import { FunctionalComponent, h } from 'preact';
+import { h } from 'preact';
 import { Link } from 'preact-router/match';
 
 import s from './style.css';
 
-const Home: FunctionalComponent = () => {
+const Home = () => {
   return (
     <div class={s.home}>
       <div class={s.container}>

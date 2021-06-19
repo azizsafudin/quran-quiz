@@ -1,11 +1,11 @@
-import { FunctionalComponent, h } from 'preact';
+import { h } from 'preact';
 import { Route, Router } from 'preact-router';
 
 import Home from './routes/home';
 import Quiz from './routes/quiz';
 import NotFoundPage from './routes/notfound';
 
-const App: FunctionalComponent = () => {
+const App = () => {
   return (
     <div id="preact_root">
       <Router>

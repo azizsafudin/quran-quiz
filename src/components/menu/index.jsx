@@ -1,4 +1,4 @@
-import { FunctionalComponent, Fragment, h } from 'preact';
+import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
@@ -6,13 +6,13 @@ import { getLanguages, getEdition } from '../../api/quran';
 
 import s from './style.css';
 
-type Props = {
-  quran: any;
-  lifelines: Record<string, any>;
-  onStartQuiz: (settings: Record<string, any>) => void;
-}
+// type Props = {
+//   quran: any;
+//   lifelines: Record<string, any>;
+//   onStartQuiz: (settings: Record<string, any>) => void;
+// }
 
-const Menu = (props: Props) => {
+const Menu = (props) => {
   const { 
     quran,
     lifelines,
@@ -31,7 +31,7 @@ const Menu = (props: Props) => {
   const [rounds, setRounds] = useState(5);
 
   useEffect(() => { 
-    const init = async (): Promise<void> => {
+    const init = async () => {
       const languageData = await getLanguages();
       setLanguageList(languageData);
       const editionData = await getEdition("text", selectedLanguage, "translation");
@@ -40,7 +40,7 @@ const Menu = (props: Props) => {
     init()
   }, []);
 
-  const handleLanguageChange = async (lang: string): void => {
+  const handleLanguageChange = async (lang) => {
     setSelectedTranslation("")
     const editionData = await getEdition("text", lang, "translation");
     setTranslationList(editionData);
@@ -48,32 +48,32 @@ const Menu = (props: Props) => {
     setProgress(progress >= 1 ? progress: 1);
   }
 
-  const handleTranslationChange = (id: string): void => {
+  const handleTranslationChange = (id) => {
     setSelectedTranslation(id);
     setProgress(progress >= 2 ? progress: 2);
   }
 
-  const onSelectSurah = (key: number) => {
+  const onSelectSurah = (key) => {
     const newSet = new Set(selectedSurahs);
     newSet.add(key-1);
     setSelectedSurahs(newSet);
     setProgress(progress >= 3 ? progress: 3);
   }
 
-  const onDeselectSurah = (key: number) => {
+  const onDeselectSurah = (key) => {
     const newSet = new Set(selectedSurahs);
     newSet.delete(key-1);
     setSelectedSurahs(newSet);
   }
 
-  const onSelectLifeline = (key: string) => {
+  const onSelectLifeline = (key) => {
     const newSet = new Set(selectedLifelines);
     newSet.add(key);
     setSelectedLifelines(newSet);
     setProgress(progress >= 4 ? progress: 4);
   }
 
-  const onDeselectLifeline = (key: string) => {
+  const onDeselectLifeline = (key) => {
     const newSet = new Set(selectedLifelines);
     newSet.delete(key);
     setSelectedLifelines(newSet);
@@ -173,6 +173,7 @@ const Menu = (props: Props) => {
               placeholder="Select Lifelines"
               onSelect={onSelectLifeline}
               onDeselect={onDeselectLifeline}
+              disabled
             >
               {Object.entries(lifelines).map(([key, value]) => (
                 <Select.Option 
@@ -189,7 +190,7 @@ const Menu = (props: Props) => {
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>No. of Rounds</label>
             <Slider
-              tipFormatter={(val: number): string => { return val === 0 ? "Unlimited Rounds ∞" : String(val)}}
+              tipFormatter={val => { return val === 0 ? "Unlimited Rounds ∞" : String(val)}}
               style={{ width: '100%' }}
               min={0}
               max={100}

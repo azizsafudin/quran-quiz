@@ -1,4 +1,4 @@
-import { FunctionalComponent, Fragment, h } from 'preact';
+import { Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
 import { Button } from 'antd';
@@ -8,12 +8,12 @@ import { getRandomInt } from '../../util/main';
 
 import s from './style.css';
 
-type Props = {
-  quran: Record<string, any>;
-  translation: Record<string, any>;
-  settings: Record<string, any>;
-  onResetQuiz: () => void;
-}
+// type Props = {
+//   quran: Record<string, any>;
+//   translation: Record<string, any>;
+//   settings: Record<string, any>;
+//   onResetQuiz: () => void;
+// }
 
 const GAME_STATE = Object.freeze({ 
   UNSTARTED: 1, 
@@ -22,7 +22,7 @@ const GAME_STATE = Object.freeze({
   COMPLETED_EMPTY_BANK: 4
 })
 
-const Game = (props: Props) => {
+const Game = (props) => {
   const { 
     quran,
     translation,
@@ -44,9 +44,9 @@ const Game = (props: Props) => {
   }, [settings]);
 
   const getAyahFromQuran = (
-    surah: number, 
-    ayah: number, 
-    numberInSurah: number
+    surah, 
+    ayah, 
+    numberInSurah
   ) => {
     let candidateAyah = quran.surahs[surah].ayahs[ayah];
     if (candidateAyah.numberInSurah !== numberInSurah) {
@@ -69,7 +69,7 @@ const Game = (props: Props) => {
       const ayahKey = getRandomInt(0, currSurah.ayahs.length);
       const currAyah = currSurah.ayahs[ayahKey];
 
-      const answer = getAyahFromQuran(surahKey, ayahKey, currAyah.numberInSurah);
+      const answer = getAyahFromQuran(Number(surahKey), ayahKey, currAyah.numberInSurah);
 
       const nextQuestion = { 
         surahKey, 
