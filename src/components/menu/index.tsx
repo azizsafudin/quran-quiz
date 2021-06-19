@@ -1,5 +1,5 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 
 import s from './style.css';
@@ -29,7 +29,7 @@ const Menu = (props: Props) => {
   const [selectedTranslation, setSelectedTranslation] = useState("");
   const [selectedSurahs, setSelectedSurahs] = useState(new Set());
   const [selectedLifelines, setSelectedLifelines] = useState(new Set());
-  const [rounds, setRounds] = useState(1);
+  const [rounds, setRounds] = useState(5);
 
   const handleLanguageChange = (lang: string): void => {
     setSelectedTranslation("")
@@ -43,16 +43,16 @@ const Menu = (props: Props) => {
     setProgress(progress >= 2 ? progress: 2);
   }
 
-  const onSelectSurah = (key: string) => {
+  const onSelectSurah = (key: number) => {
     const newSet = new Set(selectedSurahs);
-    newSet.add(key);
+    newSet.add(key-1);
     setSelectedSurahs(newSet);
     setProgress(progress >= 3 ? progress: 3);
   }
 
-  const onDeselectSurah = (key: string) => {
+  const onDeselectSurah = (key: number) => {
     const newSet = new Set(selectedSurahs);
-    newSet.delete(key);
+    newSet.delete(key-1);
     setSelectedSurahs(newSet);
   }
 
@@ -159,7 +159,8 @@ const Menu = (props: Props) => {
       language: selectedLanguage,
       translation: selectedTranslation,
       surahs: selectedSurahs,
-      lifelines: selectedLifelines
+      lifelines: selectedLifelines,
+      rounds
     };
     onStartQuiz(pref);
   }
