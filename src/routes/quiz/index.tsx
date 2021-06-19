@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Spin } from 'antd';
-import { getEdition, getLanguages, getQuran } from '../../api/quran';
+import { getLanguages, getQuran } from '../../api/quran';
 import Menu from "../../components/menu";
 import Game from "../../components/game";
 
@@ -20,8 +20,6 @@ export const lifelines = {
 
 const Quiz: FunctionalComponent = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [languageList, setLanguageList] = useState([]);
-  const [translationList, setTranslationList] = useState([]);
   const [quran, setQuran] = useState({});
   const [translation, setTranslation] = useState({});
   const [settings, setSettings] = useState(null);
@@ -31,23 +29,12 @@ const Quiz: FunctionalComponent = () => {
     const quranData = await getQuran();
     setQuran(quranData);
 
-    const languageData = await getLanguages();
-    setLanguageList(languageData);
-
-    const editionData = await getEdition();
-    setTranslationList(editionData);
-
     setIsLoading(false);
   }
 
   useEffect(()=> {
     init();
   }, []);
-
-  const onSelectLanguage = async (lang: string): Promise<void> => {
-    const editionData = await getEdition("text", lang, "translation");
-    setTranslationList(editionData);
-  }
 
   const getTranslations = async (id: string): Promise<void> => {
     const translationData = await getQuran(id);
@@ -65,9 +52,6 @@ const Quiz: FunctionalComponent = () => {
       ? <Game quran={quran} translation={translation} settings={settings} />
       : <Menu
           quran={quran}
-          languageList={languageList}
-          translationList={translationList} 
-          onSelectLanguage={onSelectLanguage}
           onStartQuiz={onStartQuiz}
           lifelines={lifelines}
         />  

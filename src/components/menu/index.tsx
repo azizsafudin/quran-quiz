@@ -1,30 +1,28 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 import { DoubleRightOutlined } from '@ant-design/icons';
+import { getLanguages, getEdition } from '../../api/quran';
 
 import s from './style.css';
 
 type Props = {
   quran: any;
-  languageList: string[];
-  translationList: Record<string, any>[];
   lifelines: Record<string, any>;
-  onSelectLanguage: (lang: string) => void;
   onStartQuiz: (settings: Record<string, any>) => void;
 }
 
 const Menu = (props: Props) => {
   const { 
     quran,
-    languageList,
-    translationList,
     lifelines,
-    onSelectLanguage,
     onStartQuiz
   } = props;
 
   const [progress, setProgress] = useState(1);
+
+  const [languageList, setLanguageList] = useState([]);
+  const [translationList, setTranslationList] = useState([]);
 
   const [selectedLanguage, setSelectedLanguage] = useState("en");
   const [selectedTranslation, setSelectedTranslation] = useState("");
@@ -32,9 +30,20 @@ const Menu = (props: Props) => {
   const [selectedLifelines, setSelectedLifelines] = useState(new Set());
   const [rounds, setRounds] = useState(5);
 
-  const handleLanguageChange = (lang: string): void => {
+  useEffect(() => { 
+    const init = async (): Promise<void> => {
+      const languageData = await getLanguages();
+      setLanguageList(languageData);
+      const editionData = await getEdition("text", selectedLanguage, "translation");
+      setTranslationList(editionData);
+    }
+    init()
+  }, []);
+
+  const handleLanguageChange = async (lang: string): void => {
     setSelectedTranslation("")
-    onSelectLanguage(lang)
+    const editionData = await getEdition("text", lang, "translation");
+    setTranslationList(editionData);
     setSelectedLanguage(lang);
     setProgress(progress >= 1 ? progress: 1);
   }
@@ -81,14 +90,16 @@ const Menu = (props: Props) => {
     onStartQuiz(pref);
   }
 
+
   return (
     <div class={s["menu-container"]}>
       <h1 class={s.title}>Qur'an Quiz App</h1>
         <div class={s["form-row"]}>
           <label class={s["form-label"]}>Language</label>
           <Select
-            size="large"
+            key={selectedLanguage}
             defaultValue={selectedLanguage}
+            size="large"
             style={{ width: '100%' }}
             showArrow={true}
             placeholder="Select a language"
@@ -108,6 +119,8 @@ const Menu = (props: Props) => {
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Translation</label>
             <Select
+              key={selectedTranslation}
+              defaultValue={selectedTranslation}
               showSearch={translationList.length > 10}
               size="large"
               style={{ width: '100%' }}
