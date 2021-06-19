@@ -12,6 +12,7 @@ type Props = {
   quran: Record<string, any>;
   translation: Record<string, any>;
   settings: Record<string, any>;
+  onResetQuiz: () => void;
 }
 
 const GAME_STATE = Object.freeze({ 
@@ -25,7 +26,8 @@ const Game = (props: Props) => {
   const { 
     quran,
     translation,
-    settings
+    settings,
+    onResetQuiz
   } = props;
 
   const [questionBank, setQuestionBank] = useState({});
@@ -87,13 +89,11 @@ const Game = (props: Props) => {
       
       // After using the question, remove from the question bank.
       questionBank[surahKey].ayahs.splice(ayahKey, 1)
-      if (questionBank[surahKey].ayahs.lengths === 0) {
+      if (questionBank[surahKey].ayahs.length === 0) {
         delete questionBank[surahKey]
       }
       
       setCurrQuestion(nextQuestion)
-
-      console.log(nextQuestion)
     }
   }, [round])
 
@@ -106,7 +106,6 @@ const Game = (props: Props) => {
     }
     setRound(round + 1);
   }
-
 
   return (
     <div class={s["main-container"]}>
@@ -130,13 +129,13 @@ const Game = (props: Props) => {
                 </span>
                 <div class={s["more-info-container"]}>
                   <span class={s["more-info-text"]} >
+                    Surah: {`${currQuestion.answer.surah.englishName} - ${currQuestion.answer.surah.englishNameTranslation} - ${currQuestion.answer.surah.name}`}
+                  </span>
+                  <span class={s["more-info-text"]} >
                     Ayah: {currQuestion.answer.numberInSurah}
                   </span>
                   <span class={s["more-info-text"]} >
                     Juz: {currQuestion.answer.juz}
-                  </span>
-                  <span class={s["more-info-text"]} >
-                    Surah: {`${currQuestion.answer.surah.englishName} - ${currQuestion.answer.surah.englishNameTranslation} - ${currQuestion.answer.surah.name}`}
                   </span>
                 </div>
               </div>
@@ -152,8 +151,23 @@ const Game = (props: Props) => {
             </div>           
           </Fragment>
         )}
-        {gameState === GAME_STATE.COMPLETED_EMPTY_BANK && <p>Game Over: No more Ayahs in the question bank</p>}
-        {gameState === GAME_STATE.COMPLETED_ROUNDS && <p>Game Over!</p>}
+        {gameState === GAME_STATE.COMPLETED_EMPTY_BANK && (
+          <div class={s.gameover}>
+            <span class={s["gameover-text"]}>Quiz Over!</span>
+            <span class={s["gameover-text"]}>No more Ayahs in the question bank.</span>
+            <Button type="default" size="large" shape="round" onClick={onResetQuiz}>
+              Play Again?
+            </Button>
+          </div>
+        )}
+        {gameState === GAME_STATE.COMPLETED_ROUNDS && (
+          <div class={s.gameover}>
+            <span class={s["gameover-text"]}>Game Over!</span>
+            <Button type="default" size="large" shape="round" onClick={onResetQuiz}>
+              Play Again?
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

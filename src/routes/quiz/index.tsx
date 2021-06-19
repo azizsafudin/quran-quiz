@@ -1,7 +1,7 @@
 import { FunctionalComponent, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Spin } from 'antd';
-import { getLanguages, getQuran } from '../../api/quran';
+import { getQuran } from '../../api/quran';
 import Menu from "../../components/menu";
 import Game from "../../components/game";
 
@@ -47,14 +47,23 @@ const Quiz: FunctionalComponent = () => {
     setIsGameStarted(true);
   }
 
+  const onResetQuiz = () => {
+    setIsGameStarted(false);
+  }
+
   const ActivePanel = () => {
     return isGameStarted 
-      ? <Game quran={quran} translation={translation} settings={settings} />
+      ? <Game 
+          quran={quran}
+          translation={translation}
+          settings={settings}
+          onResetQuiz={onResetQuiz}
+        />
       : <Menu
           quran={quran}
           onStartQuiz={onStartQuiz}
           lifelines={lifelines}
-        />  
+        />
   }
 
   return (
