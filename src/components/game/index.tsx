@@ -41,8 +41,16 @@ const Game = (props: Props) => {
     setQuestionBank(selectedSurahs);
   }, [settings]);
 
-  const getAyahFromQuran = (surah: number, ayah: number) => {
-    return quran.surahs[surah].ayahs[ayah];
+  const getAyahFromQuran = (
+    surah: number, 
+    ayah: number, 
+    numberInSurah: number
+  ) => {
+    let candidateAyah = quran.surahs[surah].ayahs[ayah];
+    if (candidateAyah.numberInSurah !== numberInSurah) {
+      candidateAyah = quran.surahs[surah].ayahs.find(ay => ay.numberInSurah === numberInSurah)
+    }
+    return candidateAyah;
   }
 
   useEffect(() => {
@@ -59,7 +67,7 @@ const Game = (props: Props) => {
       const ayahKey = getRandomInt(0, currSurah.ayahs.length);
       const currAyah = currSurah.ayahs[ayahKey];
 
-      const answer = getAyahFromQuran(surahKey, ayahKey);
+      const answer = getAyahFromQuran(surahKey, ayahKey, currAyah.numberInSurah);
 
       const nextQuestion = { 
         surahKey, 
@@ -84,6 +92,8 @@ const Game = (props: Props) => {
       }
       
       setCurrQuestion(nextQuestion)
+
+      console.log(nextQuestion)
     }
   }, [round])
 
@@ -126,7 +136,7 @@ const Game = (props: Props) => {
                     Juz: {currQuestion.answer.juz}
                   </span>
                   <span class={s["more-info-text"]} >
-                  Surah: {`${currQuestion.answer.surah.englishName} - ${currQuestion.answer.surah.englishNameTranslation} - ${currQuestion.answer.surah.name}`}
+                    Surah: {`${currQuestion.answer.surah.englishName} - ${currQuestion.answer.surah.englishNameTranslation} - ${currQuestion.answer.surah.name}`}
                   </span>
                 </div>
               </div>
