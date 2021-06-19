@@ -1,6 +1,7 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
 import { useState } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
+import { DoubleRightOutlined } from '@ant-design/icons';
 
 import s from './style.css';
 
@@ -91,7 +92,7 @@ const Menu = (props: Props) => {
 
   const renderTranslationList = (): JSX.Element => (
     <Select
-      showSearch
+      showSearch={translationList.length > 10}
       size="large"
       style={{ width: '100%' }}
       showArrow={true}
@@ -190,7 +191,7 @@ const Menu = (props: Props) => {
             {renderLifelineList()}
           </div>
         )}
-        {progress > 3 && (
+        {progress > 2 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>No. of Rounds</label>
             <Slider
@@ -204,10 +205,10 @@ const Menu = (props: Props) => {
             />
           </div>
         )}
-        {progress > 3 && (
+        {progress > 2 && (
           <div class={s["button-container"]}>
             <Button onClick={startQuiz} type="default" size="large" shape="round" disabled={!(selectedTranslation && selectedSurahs.size > 0)}>
-              Start Quiz!
+              Continue <DoubleRightOutlined />
             </Button>
           </div>
         )}
