@@ -70,91 +70,6 @@ const Menu = (props: Props) => {
     setSelectedLifelines(newSet);
   }
 
-  const renderLanguageList = (): JSX.Element => (
-    <Select
-      size="large"
-      defaultValue="en"
-      style={{ width: '100%' }}
-      showArrow={true}
-      placeholder="Select a language"
-      onSelect={handleLanguageChange}
-    >
-      {languageList.map((val) => (
-        <Select.Option 
-          key={val} 
-          value={val}
-        >
-          {val}
-        </Select.Option>
-      ))}
-    </Select>
-  );
-
-  const renderTranslationList = (): JSX.Element => (
-    <Select
-      showSearch={translationList.length > 10}
-      size="large"
-      style={{ width: '100%' }}
-      showArrow={true}
-      placeholder="Select a translation to use"
-      onSelect={handleTranslationChange}
-    >
-      {translationList.map(({ identifier, englishName }) => (
-        <Select.Option 
-          key={identifier} 
-          value={identifier}
-        >
-          {englishName}
-        </Select.Option>
-      ))}
-    </Select>
-  );
-
-  const renderSurahList = () => (
-    <Select
-      mode="multiple"
-      size="large"
-      style={{ width: '100%' }}
-      showArrow={true}
-      placeholder="Select your Surahs to be quizzed on"
-      onSelect={onSelectSurah}
-      onDeselect={onDeselectSurah}
-      filterOption={(val, opt) => opt.children.toLowerCase().includes(val)}
-    >
-      {quran.surahs.map(({ number, englishName, englishNameTranslation, name }) => (
-          <Select.Option 
-            key={number}
-            value={number}
-          >
-            {`${englishName} - ${englishNameTranslation} - ${name}`}
-          </Select.Option>
-        ))}
-    </Select>
-  )
-
-  const renderLifelineList = () => {
-    return (
-      <Select
-        mode="multiple"
-        size="large"
-        style={{ width: '100%' }}
-        showArrow={true}
-        placeholder="Select Lifelines"
-        onSelect={onSelectLifeline}
-        onDeselect={onDeselectLifeline}
-      >
-        {Object.entries(lifelines).map(([key, value]) => (
-          <Select.Option 
-            key={key}
-            value={key}
-          >
-            {value}
-          </Select.Option>
-        ))}
-      </Select>
-    )
-  }
-
   const startQuiz = () => {
     const pref = {
       language: selectedLanguage,
@@ -171,24 +86,91 @@ const Menu = (props: Props) => {
       <h1 class={s.title}>Qur'an Quiz App</h1>
         <div class={s["form-row"]}>
           <label class={s["form-label"]}>Language</label>
-          {renderLanguageList()}
+          <Select
+            size="large"
+            defaultValue={selectedLanguage}
+            style={{ width: '100%' }}
+            showArrow={true}
+            placeholder="Select a language"
+            onSelect={handleLanguageChange}
+          >
+            {languageList.map((val) => (
+              <Select.Option 
+                key={val} 
+                value={val}
+              >
+                {val}
+              </Select.Option>
+            ))}
+          </Select>
         </div>
         {progress > 0 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Translation</label>
-            {renderTranslationList()}
+            <Select
+              showSearch={translationList.length > 10}
+              size="large"
+              style={{ width: '100%' }}
+              showArrow={true}
+              placeholder="Select a translation to use"
+              onSelect={handleTranslationChange}
+            >
+              {translationList.map(({ identifier, englishName }) => (
+                <Select.Option 
+                  key={identifier} 
+                  value={identifier}
+                >
+                  {englishName}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         )}
         {progress > 1 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Surah</label>
-            {renderSurahList()}
+            <Select
+              mode="multiple"
+              size="large"
+              style={{ width: '100%' }}
+              showArrow={true}
+              placeholder="Select your Surahs to be quizzed on"
+              onSelect={onSelectSurah}
+              onDeselect={onDeselectSurah}
+              filterOption={(val, opt) => opt.children.toLowerCase().includes(val)}
+            >
+              {quran.surahs.map(({ number, englishName, englishNameTranslation, name }) => (
+                  <Select.Option 
+                    key={number}
+                    value={number}
+                  >
+                    {`${englishName} - ${englishNameTranslation} - ${name}`}
+                  </Select.Option>
+                ))}
+            </Select>
           </div>
         )}
         {progress > 2 && (
           <div class={s["form-row"]}>
             <label class={s["form-label"]}>Lifelines</label>
-            {renderLifelineList()}
+            <Select
+              mode="multiple"
+              size="large"
+              style={{ width: '100%' }}
+              showArrow={true}
+              placeholder="Select Lifelines"
+              onSelect={onSelectLifeline}
+              onDeselect={onDeselectLifeline}
+            >
+              {Object.entries(lifelines).map(([key, value]) => (
+                <Select.Option 
+                  key={key}
+                  value={key}
+                >
+                  {value}
+                </Select.Option>
+              ))}
+            </Select>
           </div>
         )}
         {progress > 2 && (
