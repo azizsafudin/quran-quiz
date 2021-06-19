@@ -1,5 +1,5 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { Select, Slider, Button } from 'antd';
 
 import s from './style.css';

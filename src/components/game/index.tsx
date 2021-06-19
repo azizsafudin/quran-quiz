@@ -1,6 +1,9 @@
 import { FunctionalComponent, Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
+import { Button } from 'antd';
+
+
 import { getRandomInt } from '../../util/main';
 
 import s from './style.css';
@@ -83,19 +86,37 @@ const Game = (props: Props) => {
   }
 
   return (
-    <div class={s["game-container"]}>
+    <div class={s["main-container"]}>
       <h1 class={s.title}>Qur'an Quiz App</h1>
-      {gameState === GAME_STATE.UNSTARTED && <button onClick={incrementRound}>Start Quiz</button>} 
-      {gameState === GAME_STATE.IN_PROGRESS && currQuestion && (
-        <Fragment>
-          <p>Round: {round}</p>
-          <p>Ayaah: {currQuestion && currQuestion.ayah.text}</p>
-          <p>Answer: {currQuestion && currQuestion.answer.text}</p>
-          <button onClick={incrementRound}>Next Ayah</button>
-        </Fragment>
-      )}
-      {gameState === GAME_STATE.COMPLETED_EMPTY_BANK && <p>Game Over: No more Ayahs in the question bank</p>}
-      {gameState === GAME_STATE.COMPLETED_ROUNDS && <p>Game Over!</p>}
+      <div class={s["game-container"]}>
+        {gameState === GAME_STATE.UNSTARTED && (
+          <Button type="default" size="large" shape="round"onClick={incrementRound}>Start Quiz</Button>
+        )} 
+        {gameState === GAME_STATE.IN_PROGRESS && currQuestion && (
+          <Fragment>
+            <div class={s["item-row"]}>
+              <span class={s["main-text"]}>Round: {round}</span>
+            </div>
+            <div class={s["item-row"]}>
+              <span class={s["main-text"]}>Ayaah: </span> 
+              <span class={s["content-text"]}>
+                "{currQuestion && currQuestion.ayah.text}""
+              </span>
+            </div>
+            <div class={s["item-row"]}>
+              <span class={s["main-text"]}>Answer: </span> 
+              <span class={s["content-text"]}>
+                {currQuestion && currQuestion.answer.text}
+              </span>
+            </div>
+            <div class={s["item-row"]}>
+              <Button type="default" size="large" shape="round" onClick={incrementRound}>Next Ayah</Button>
+            </div>
+          </Fragment>
+        )}
+        {gameState === GAME_STATE.COMPLETED_EMPTY_BANK && <p>Game Over: No more Ayahs in the question bank</p>}
+        {gameState === GAME_STATE.COMPLETED_ROUNDS && <p>Game Over!</p>}
+      </div>
     </div>
   )
 }
