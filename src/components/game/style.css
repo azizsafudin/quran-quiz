@@ -3,6 +3,7 @@
 	align-items: center;
 	flex-direction: column;
 	width: 100%;
+	height: 50em;
 }
 
 .title {
@@ -16,28 +17,34 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-}
-
-.item-row {
-	display: flex;
+	height: 50em;
 	width: 100%;
-	margin-top: 1.5em;
 }
 
 .main-text {
 	font-family: 'Roboto Slab', serif;
 	font-size: 1.5em;
-	color: #003459
+	text-align: center;
+	color: #003459;
+	margin-top: 5%;
 }
 
-.content-text {
+.translation-text {
 	font-family: 'Libre Baskerville', serif;
 	font-size: 1.5em;
-	color: #003459
+	text-align: center;
+	color: #003459;
+	margin-top: 5%;
 }
 
 .arabic-text {
-	font-family: 'Tajawal';
-	font-size: 1.5em;
-	color: #003459
+	font-family: 'Tajawal', sans-serif;
+	font-size: 2.5em;
+	text-align: center;
+	color: #003459;
+	margin-top: 5%;
+}
+
+.button-container {
+	margin-top: 5%;
 }

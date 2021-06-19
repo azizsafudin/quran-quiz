@@ -61,7 +61,9 @@ const Quiz: FunctionalComponent = () => {
     <div class={s["quiz-container"]}>
       {isLoading
         ? 
-        <Spin size="large" />
+        <div class={s.spinner}>
+          <Spin size="large" />
+        </div>
         :
         <ActivePanel />
       }

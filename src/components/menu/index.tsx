@@ -90,7 +90,6 @@ const Menu = (props: Props) => {
     onStartQuiz(pref);
   }
 
-
   return (
     <div class={s["menu-container"]}>
       <h1 class={s.title}>Qur'an Quiz App</h1>

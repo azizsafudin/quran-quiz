@@ -2,7 +2,7 @@ import { FunctionalComponent, Fragment, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
 import { Button } from 'antd';
-
+import { DoubleRightOutlined } from '@ant-design/icons';
 
 import { getRandomInt } from '../../util/main';
 
@@ -30,6 +30,7 @@ const Game = (props: Props) => {
 
   const [questionBank, setQuestionBank] = useState({});
   const [currQuestion, setCurrQuestion] = useState(null);
+  const [showAnswer, setShowAnswer] = useState(false);
   const [round, setRound] = useState(0);
   const [gameState, setGameState] = useState(GAME_STATE.UNSTARTED);
 
@@ -76,7 +77,8 @@ const Game = (props: Props) => {
     }
   }, [round])
 
-  const incrementRound = () => {
+  const nextRound = () => {
+    setShowAnswer(false);
     if (round === 0) setGameState(GAME_STATE.IN_PROGRESS);
     if (round === settings.rounds && settings.rounds !== 0) {
       setGameState(GAME_STATE.COMPLETED_ROUNDS);
@@ -90,26 +92,30 @@ const Game = (props: Props) => {
       <h1 class={s.title}>Qur'an Quiz App</h1>
       <div class={s["game-container"]}>
         {gameState === GAME_STATE.UNSTARTED && (
-          <Button type="default" size="large" shape="round"onClick={incrementRound}>Begin Quiz</Button>
+          <Button type="default" size="large" shape="round"onClick={nextRound}>Begin Quiz</Button>
         )} 
         {gameState === GAME_STATE.IN_PROGRESS && currQuestion && (
           <Fragment>
             <div>
               <span class={s["main-text"]}>{round} out of {settings.rounds === 0 ? "∞" : settings.rounds} </span>
             </div>
-            <div class={s["item-row"]}>
-              <span class={s["content-text"]}>
-                "{currQuestion && currQuestion.ayah.text}""
+            <span class={s["translation-text"]}>
+                "{currQuestion && currQuestion.ayah.text}"
               </span>
-            </div>
-            <div class={s["item-row"]}>
+            {showAnswer && (
               <span class={s["arabic-text"]}>
                 {currQuestion && currQuestion.answer.text}
               </span>
-            </div>
-            <div class={s["item-row"]}>
-              <Button type="default" size="large" shape="round" onClick={incrementRound}>Next Ayah</Button>
-            </div>
+            )}
+            <div class={s["button-container"]}>
+              {!showAnswer ? 
+                <Button type="default" size="large" shape="round" onClick={() => setShowAnswer(true)}>Reveal Answer</Button>
+                :
+                <Button type="default" size="large" shape="round" onClick={nextRound}>
+                  Next Ayah <DoubleRightOutlined />
+                </Button>
+              }
+            </div>           
           </Fragment>
         )}
         {gameState === GAME_STATE.COMPLETED_EMPTY_BANK && <p>Game Over: No more Ayahs in the question bank</p>}
