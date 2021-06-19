@@ -1,10 +1,22 @@
-import { FunctionalComponent, Fragment, h } from 'preact';
+import { FunctionalComponent, h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
-import { Select, Button, Spin } from 'antd';
+import { Spin } from 'antd';
 import { getEdition, getLanguages, getQuran } from '../../api/quran';
 import Menu from "../../components/menu";
+import Game from "../../components/game";
 
 import s from './style.css';
+
+export const lifelines = {
+  getbefore: "Get the ayah before",
+  getafter: "Get the ayah after",
+  getsurahenglish: "Get the English translation of the name of the surah the ayah is from",
+  getsuraharabic: "Get the Arabic name of the surah the ayah is from",
+  getjuz: "Get which Juz the ayah is from",
+  getrandomword: "Get a random Arabic word from the ayah",
+  getlocation: "Get ayah is Meccan and Medinan",
+  getnumber: "Get the number of the ayah in the surah"
+};
 
 const Quiz: FunctionalComponent = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -12,17 +24,8 @@ const Quiz: FunctionalComponent = () => {
   const [translationList, setTranslationList] = useState([]);
   const [quran, setQuran] = useState({});
   const [translation, setTranslation] = useState({});
-
-  const lifelines = {
-    getbefore: "Get the ayah before",
-    getafter: "Get the ayah after",
-    getsurahenglish: "Get the English translation of the name of the surah the ayah is from",
-    getsuraharabic: "Get the Arabic name of the surah the ayah is from",
-    getjuz: "Get which Juz the ayah is from",
-    getrandomword: "Get a random Arabic word from the ayah",
-    getlocation: "Get ayah is Meccan and Medinan",
-    getnumber: "Get the number of the ayah in the surah"
-  };
+  const [settings, setSettings] = useState(null);
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
   const init = async (): Promise<void> => {
     const quranData = await getQuran();
@@ -51,9 +54,23 @@ const Quiz: FunctionalComponent = () => {
     setTranslation(translationData);
   }
 
-  const onStartQuiz = (settings: Record<string, any>) => {
-    console.log(settings)
-    getTranslations(settings.translation);
+  const onStartQuiz = async (settings: Record<string, any>) => {
+    await getTranslations(settings.translation);
+    setSettings(settings);
+    setIsGameStarted(true);
+  }
+
+  const ActivePanel = () => {
+    return isGameStarted 
+      ? <Game quran={quran} translation={translation} settings={settings} />
+      : <Menu
+          quran={quran}
+          languageList={languageList}
+          translationList={translationList} 
+          onSelectLanguage={onSelectLanguage}
+          onStartQuiz={onStartQuiz}
+          lifelines={lifelines}
+        />  
   }
 
   return (
@@ -62,14 +79,7 @@ const Quiz: FunctionalComponent = () => {
         ? 
         <Spin size="large" />
         :
-        <Menu
-          quran={quran}
-          languageList={languageList}
-          translationList={translationList} 
-          onSelectLanguage={onSelectLanguage}
-          onStartQuiz={onStartQuiz}
-          lifelines={lifelines}
-        />
+        <ActivePanel />
       }
     </div>
   );
