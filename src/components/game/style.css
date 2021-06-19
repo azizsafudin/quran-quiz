@@ -29,6 +29,12 @@
 	margin-top: 5%;
 }
 
+.answer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .translation-text {
 	font-family: 'Libre Baskerville', serif;
 	font-size: 1.5em;
@@ -43,6 +49,18 @@
 	text-align: center;
 	color: #003459;
 	margin-top: 5%;
+}
+
+.more-info-container {
+	margin-top: 5%;
+}
+
+.more-info-text {
+	font-family: 'Roboto Slab', serif;
+	font-size: 1.5em;
+	text-align: center;
+	color: #003459;
+	margin-left: 2em;
 }
 
 .button-container {

@@ -59,12 +59,22 @@ const Game = (props: Props) => {
       const ayahKey = getRandomInt(0, currSurah.ayahs.length);
       const currAyah = currSurah.ayahs[ayahKey];
 
+      const answer = getAyahFromQuran(surahKey, ayahKey);
+
       const nextQuestion = { 
         surahKey, 
         ayahKey,
         surah: currSurah, 
         ayah: currAyah,
-        answer: getAyahFromQuran(surahKey, ayahKey)
+        answer: {
+          ...answer, 
+          surah: 
+          {
+            englishName: currSurah.englishName,
+            englishNameTranslation: currSurah.englishNameTranslation,
+            name: currSurah.name,
+          } 
+        }
       }
       
       // After using the question, remove from the question bank.
@@ -87,6 +97,7 @@ const Game = (props: Props) => {
     setRound(round + 1);
   }
 
+
   return (
     <div class={s["main-container"]}>
       <h1 class={s.title}>Qur'an Quiz App</h1>
@@ -102,10 +113,23 @@ const Game = (props: Props) => {
             <span class={s["translation-text"]}>
                 "{currQuestion && currQuestion.ayah.text}"
               </span>
-            {showAnswer && (
-              <span class={s["arabic-text"]}>
-                {currQuestion && currQuestion.answer.text}
-              </span>
+            {showAnswer && currQuestion && (
+              <div class={s.answer}>
+                <span class={s["arabic-text"]}>
+                  {currQuestion.answer.text}
+                </span>
+                <div class={s["more-info-container"]}>
+                  <span class={s["more-info-text"]} >
+                    Ayah: {currQuestion.answer.numberInSurah}
+                  </span>
+                  <span class={s["more-info-text"]} >
+                    Juz: {currQuestion.answer.juz}
+                  </span>
+                  <span class={s["more-info-text"]} >
+                  Surah: {`${currQuestion.answer.surah.englishName} - ${currQuestion.answer.surah.englishNameTranslation} - ${currQuestion.answer.surah.name}`}
+                  </span>
+                </div>
+              </div>
             )}
             <div class={s["button-container"]}>
               {!showAnswer ? 
